@@ -1,73 +1,47 @@
 package com.example.travelmate
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.squareup.picasso.Picasso
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.*
+import com.example.travelmate.R.id.editTextName
+import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.tour_layout)
+        setContentView(R.layout.activity_main)
 
-        val tourDataUrl = "https://kraina-ua.com/ru/tours/tours-ukraine"
-        val tourContainer = findViewById<LinearLayout>(R.id.tourContainer)
 
-        // Загрузка данных и парсингы
-        Thread {
-            try {
-                val doc: Document = Jsoup.connect(tourDataUrl).get()
-                Log.d("DEBUG", "HTML загружен: $doc")
 
-                val tourElements: Elements = doc.select(".txt-top, .tour-list, .price")
+        val loginTextInputLayout = findViewById<TextInputLayout>(R.id.textInputLayoutName)
+        val passwordTextInputLayout = findViewById<TextInputLayout>(R.id.textInputLayoutPassword)
+        val loginEditText = loginTextInputLayout.editText
+        val passwordEditText = passwordTextInputLayout.editText
+        val enterButton = findViewById<Button>(R.id.button1)
 
-                Log.d("DEBUG", "Найдено элементов: ${tourElements.size}")
 
-                runOnUiThread {
-                    for (element in tourElements) {
-                        val view = LayoutInflater.from(this).inflate(R.layout.tour_layout, null)
+        enterButton.setOnClickListener {
 
-                        val tourImage = view.findViewById<ImageView>(R.id.tourImage)
-                        val tourName = view.findViewById<TextView>(R.id.tourName)
-                        val tourPrice = view.findViewById<TextView>(R.id.tourPrice)
+            val enteredLogin = loginEditText?.text.toString()
+            val enteredPassword = passwordEditText?.text.toString()
 
-                        // Получение данных из элемента
-                        val imageUrlRelativePath = element.select(".tour-img img").attr("data-src")
-                        val fullImageUrl = "https://kraina-ua.com$imageUrlRelativePath"
-                        val name = element.select(".txt-top").text()
-                        val price = element.select(".price").text()
 
-                        Log.d("DEBUG", "URL изображения: $imageUrlRelativePath")
-                        Log.d("DEBUG", "Название тура: $name")
-                        Log.d("DEBUG", "Цена тура: $price")
+          /*  if (enteredLogin.equals("Vlad")&&enteredPassword=="1234")
+            {
 
-                        Glide.with(this)
-                            .load(fullImageUrl) // Полный URL изображения
-                            .placeholder(R.drawable.white_background)
-                            .centerCrop()
-                            .into(tourImage)
+            }*/
 
-                        tourName.text = name
-                        tourPrice.text = price
+            Log.e("pass", "$enteredPassword")
+            Log.d("login", "$enteredLogin")
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
 
-                        tourContainer.addView(view)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("ERROR", "Ошибка при загрузке данных: ${e.message}")
-            }
-        }.start()
+
+        }
     }
-}
+
+    }
 
