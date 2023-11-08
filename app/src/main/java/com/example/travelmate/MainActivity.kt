@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.squareup.picasso.Picasso
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -17,18 +18,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.tour_layout)
 
         val tourDataUrl = "https://kraina-ua.com/ru/tours/tours-ukraine"
         val tourContainer = findViewById<LinearLayout>(R.id.tourContainer)
 
-        // Загрузка данных и парсинг
+        // Загрузка данных и парсингы
         Thread {
             try {
                 val doc: Document = Jsoup.connect(tourDataUrl).get()
                 Log.d("DEBUG", "HTML загружен: $doc")
 
-                val tourElements: Elements = doc.select(".price, .txt-top, .tour-img")
+                val tourElements: Elements = doc.select(".txt-top, .tour-list, .price")
 
                 Log.d("DEBUG", "Найдено элементов: ${tourElements.size}")
 
@@ -41,22 +42,19 @@ class MainActivity : AppCompatActivity() {
                         val tourPrice = view.findViewById<TextView>(R.id.tourPrice)
 
                         // Получение данных из элемента
-                        val imageUrl = element.select(".img img").attr("data-src")
+                        val imageUrlRelativePath = element.select(".tour-img img").attr("data-src")
+                        val fullImageUrl = "https://kraina-ua.com$imageUrlRelativePath"
                         val name = element.select(".txt-top").text()
                         val price = element.select(".price").text()
 
-                        Log.d("DEBUG", "URL изображения: $imageUrl")
+                        Log.d("DEBUG", "URL изображения: $imageUrlRelativePath")
                         Log.d("DEBUG", "Название тура: $name")
                         Log.d("DEBUG", "Цена тура: $price")
 
-                        // Создайте параметры изменения размера
-                        val requestOptions = RequestOptions()
-                            .override(300, 200) // Установите новый размер, например, 300x200
-
-                        // Загрузка изображения с параметрами изменения размера
                         Glide.with(this)
-                            .load(imageUrl)
-                            .apply(requestOptions) // Примените параметры изменения размера
+                            .load(fullImageUrl) // Полный URL изображения
+                            .placeholder(R.drawable.white_background)
+                            .centerCrop()
                             .into(tourImage)
 
                         tourName.text = name

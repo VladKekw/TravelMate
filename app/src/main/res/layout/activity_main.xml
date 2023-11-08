@@ -5,11 +5,4 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
-    <LinearLayout
-        android:id="@+id/tourContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-    </LinearLayout>
 </androidx.cardview.widget.CardView>
