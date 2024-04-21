@@ -1,7 +1,6 @@
 package com.example.travelmate
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -24,7 +23,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     var isPermissionGranted: Boolean = false
-    lateinit var mapView: MapView
+    private lateinit var mapView: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
